@@ -31,7 +31,7 @@ export default function NavBar({items, className}: NavProps) {
                     ))}
                 </ul>
                 <div className={"d-flex gap-3 align-items-center"}>
-                    <InputCus placeholder={"Search"} className={"bg-emphasis"}/>
+                    <InputCus placeholder={"Search"} className={"bg-emphasis"} style={{color: "var(--bs-gray-200)"}}/>
                     <ShoppingBag/>
                     <CircleUserIcon/>
                 </div>

@@ -1,0 +1,17 @@
+.input-cus-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.input-cus-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #6c757d;
+}
+
+.input-cus {
+    padding-left: 40px; /* chừa chỗ cho icon */
+}

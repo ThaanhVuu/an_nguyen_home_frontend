@@ -1,7 +1,13 @@
+import InputCus from "@/components/input/InputCus";
+
 export default function Login(){
     return(
-        <div>
-
-        </div>
+        <section id={"login"}>
+            <div className={"container"}>
+                <form>
+                    <InputCus placeholder={"Username"}/>
+                </form>
+            </div>
+        </section>
     );
 }

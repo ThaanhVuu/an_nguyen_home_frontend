@@ -1,0 +1,18 @@
+.navbar-top {
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(6px);
+}
+
+.navbar-top a,
+.navbar-top span {
+    color: #fff !important;
+}
+
+.navbar-scrolled {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.navbar-scrolled a,
+.navbar-scrolled span {
+    color: #000 !important;
+}

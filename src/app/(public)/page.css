@@ -1,0 +1,37 @@
+.video-hero {
+    width: 100%;
+    height: 100svh;      /* full màn hình, không scroll */
+}
+
+.video-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -9999;
+}
+
+.video-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+            to right,
+            rgba(0, 0, 0, 0.55),
+            rgba(0, 0, 0, 0.25)
+    );
+    z-index: 0;
+}
+
+.video-hero {
+    color: #ffffff;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;      /* căn giữa theo chiều dọc */
+}

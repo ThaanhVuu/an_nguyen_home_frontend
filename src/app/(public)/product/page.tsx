@@ -49,10 +49,11 @@ export default function ProductPage() {
               >
                 <div className="product-card-wrapper">
                   <Card
-                    category="Category : "
+                    id={startIndex + index + 1}
                     title={`Product #${startIndex + index + 1}`}
                     image="https://cdnv2.tgdd.vn/mwg-static/dmx/Products/Images/1943/321948/tu-lanh-aqua-660-lit-aqr-m727xagsu1-3-638610676556046960-700x467.jpg"
                     price="9999999"
+                    category="Fridge"
                   />
                 </div>
               </div>

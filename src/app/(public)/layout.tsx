@@ -1,5 +1,4 @@
 import NavBar, { NavItem } from "@/components/nav/NavBar";
-import BootstrapJsLoader from "@/utils/BootstrapJsLoader";
 
 const itemNavs: NavItem[] = [
     { label: "Home", href: "/" },
@@ -11,7 +10,6 @@ const itemNavs: NavItem[] = [
 export default function PublicLayout({children,}: { children: React.ReactNode; }) {
     return (
         <>
-            <BootstrapJsLoader />
             <header>
                 <NavBar items={itemNavs} />
             </header>

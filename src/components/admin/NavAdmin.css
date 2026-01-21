@@ -1,0 +1,9 @@
+.nav-link-admin {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.nav-link-admin:hover, .nav-link-admin:focus{
+    background-color: #439452 !important;
+}

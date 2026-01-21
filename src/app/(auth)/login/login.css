@@ -1,0 +1,52 @@
+/* full màn hình */
+.login-page {
+    /*noinspection CssUnknownTarget*/
+    background-image: url("/login-bg.png");
+}
+
+/* card chính */
+.login-box {
+    width: 800px;
+    height: 550px;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 50 / 50 TUYỆT ĐỐI */
+    background: #fff;
+    overflow: hidden; /* rất quan trọng */
+}
+
+/* cột ảnh */
+.login-image {
+    /*position: relative;*/
+    background-image: url("/card-login.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+.login-tabs {
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.login-tabs span {
+    flex: 1;                  /* MỖI TAB CHIẾM 1 Ô */
+    text-align: center;
+    color: #6c757d;
+    position: relative;
+    padding-bottom: 8px;
+}
+
+/* active */
+.login-tabs .active {
+    color: #000;
+}
+
+/* gạch chân dài hết ô */
+.login-tabs .active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;              /* GIỜ LÀ 100% Ô FLEX */
+    height: 3px;
+    background: #000000;
+}

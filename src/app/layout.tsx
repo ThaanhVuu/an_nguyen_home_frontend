@@ -2,19 +2,18 @@ import type {Metadata} from "next";
 import {Geist, Geist_Mono} from "next/font/google";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import BootstrapJsLoader from "@/utils/BootstrapJsLoader";
 import React from "react";
-import NavBar, {NavItem} from "@/components/nav/NavBar";
+import BootstrapJsLoader from "@/utils/BootstrapJsLoader";
 
-const geistSans = Geist({
-    variable: "--font-geist-sans",
-    subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-    variable: "--font-geist-mono",
-    subsets: ["latin"],
-});
+// const geistSans = Geist({
+//     variable: "--font-geist-sans",
+//     subsets: ["latin"],
+// });
+//
+// const geistMono = Geist_Mono({
+//     variable: "--font-geist-mono",
+//     subsets: ["latin"],
+// });
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -24,7 +23,10 @@ export const metadata: Metadata = {
 export default function RootLayout({children,}: { children: React.ReactNode; }) {
     return (
         <html lang="en">
-        <body>{children}</body>
+        <body>
+        <BootstrapJsLoader />
+        {children}
+        </body>
         </html>
     );
 }

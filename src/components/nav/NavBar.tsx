@@ -3,16 +3,17 @@
 import {NavBrand} from "@/components/nav/NavBrand";
 import {NavLink} from "@/components/nav/NavLink";
 import {NavActions} from "@/components/nav/NavAction";
-import {useEffect, useState} from "react";
+import {CSSProperties, useEffect, useState} from "react";
 
 export interface NavItem {
-    label: string;
-    href: string;
+    label?: string;
+    href?: string;
 }
 
 export interface NavProps {
     items: NavItem[];
     className?: string;
+    style?: CSSProperties;
 }
 
 export default function NavBar({items, className}: NavProps) {

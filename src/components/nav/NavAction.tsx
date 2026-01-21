@@ -1,12 +1,12 @@
 import InputCus from "@/components/input/InputCus";
-import {CircleUserIcon, ShoppingBag} from "lucide-react";
+import {ShoppingBag} from "lucide-react";
 import Link from "next/link";
 
 export function NavActions() {
     return (
         <ul className="d-flex gap-3 navbar-nav align-items-center">
             <li className={"nav-item"}>
-                <InputCus placeholder="Search 🔎" className={"w-auto input-blur"}/>
+                <InputCus placeholder="Search..." className={"w-auto input-blur"}/>
             </li>
             <li className={"nav-item"}>
                 <Link href={"/cart"} className={"nav-link"}><ShoppingBag/></Link>

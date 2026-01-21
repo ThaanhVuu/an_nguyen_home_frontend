@@ -65,56 +65,56 @@ export default function ProductPage() {
                         ))}
                     </div>
 
-                    <nav className="mt-4 d-flex justify-content-center">
-                        <ul className="pagination">
-                            <li
-                                className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
-                            >
-                                <button
-                                    className="page-link"
-                                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                                >
-                                    ‹
-                                </button>
-                            </li>
+          <nav className="mt-4 d-flex justify-content-center">
+            <ul className="pagination">
+              <li
+                className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
+              >
+                <button
+                  className="page-link"
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                >
+                  ‹
+                </button>
+              </li>
 
-                            {Array.from({length: totalPages}).map((_, i) => (
-                                <li
-                                    key={i}
-                                    className={`page-item ${
-                                        currentPage === i + 1 ? "active" : ""
-                                    }`}
-                                >
-                                    <button
-                                        className="page-link"
-                                        onClick={() => setCurrentPage(i + 1)}
-                                    >
-                                        {i + 1}
-                                    </button>
-                                </li>
-                            ))}
+              {Array.from({ length: totalPages }).map((_, i) => (
+                <li
+                  key={i}
+                  className={`page-item ${
+                    currentPage === i + 1 ? "active" : ""
+                  }`}
+                >
+                  <button
+                    className="page-link"
+                    onClick={() => setCurrentPage(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                </li>
+              ))}
 
-                            <li
-                                className={`page-item ${
-                                    currentPage === totalPages ? "disabled" : ""
-                                }`}
-                            >
-                                <button
-                                    className="page-link"
-                                    onClick={() =>
-                                        setCurrentPage((p) => Math.min(totalPages, p + 1))
-                                    }
-                                >
-                                    ›
-                                </button>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-            <>
-                <Footer/>
-            </>
+              <li
+                className={`page-item ${
+                  currentPage === totalPages ? "disabled" : ""
+                }`}
+              >
+                <button
+                  className="page-link"
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(totalPages, p + 1))
+                  }
+                >
+                  ›
+                </button>
+              </li>
+            </ul>
+          </nav>
         </div>
-    );
+      </div>
+      <>
+        <Footer />
+      </>
+    </div>
+  );
 }

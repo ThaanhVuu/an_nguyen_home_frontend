@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect, useState} from "react";
+import { useState } from "react";
 import "./product.css";
 import Card from "@/components/card/card";
 import Footer from "@/components/Footer/footer";

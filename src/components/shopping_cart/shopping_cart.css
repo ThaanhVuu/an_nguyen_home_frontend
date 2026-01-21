@@ -1,0 +1,8 @@
+.cart-image {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;  
+}
+

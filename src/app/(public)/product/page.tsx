@@ -5,7 +5,7 @@ import "./product.css";
 import Card from "@/components/card/card";
 import Footer from "@/components/Footer/footer";
 import FilterSidebar from "@/components/sidebar/FilterSidebar";
-import ShoppingCartItem from "@/components/shopping_cart/shopping_cart";
+import Link from "next/link";
 
 export default function ProductPage() {
   const products = Array.from({ length: 145 }); 
@@ -24,9 +24,9 @@ export default function ProductPage() {
       <nav aria-label="breadcrumb" className="mb-3">
         <ol className="breadcrumb mb-0">
           <li className="breadcrumb-item">
-            <a href="/" className="text-decoration-none text-dark">
+            <Link href="/" className="text-decoration-none text-dark">
               Home
-            </a>
+            </Link>
           </li>
           <li className="breadcrumb-item active" aria-current="page">
             <a href="" className="text-decoration-none text-dark">

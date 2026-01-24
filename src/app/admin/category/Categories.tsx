@@ -18,9 +18,9 @@ const INIT_CATE = {
 
 export default function Categories() {
     // 2. Local state for the form
-    const [formData, setFormData] = useState<Category>(INIT_CATE);
     const [toastMsg, setToastMsg] = useState<string | null>(null);
     const [toastType, setToastType] = useState<ToastType>("error")
+    const [formData, setFormData] = useState<Category>(INIT_CATE);
     const [isEditMode, setIsEditMode] = useState(false);
 
     const {
@@ -148,8 +148,10 @@ export default function Categories() {
     const handleSave = async () => {
         try {
             if (isEditMode) {
+                console.log(formData)
                 await updateCategory(formData);
             } else {
+                console.log(formData)
                 await insertCategory(formData);
             }
 
@@ -185,14 +187,14 @@ export default function Categories() {
     return (
         <section className="row container-fluid align-items-start mt-5">
             {/* Sidebar / Tools */}
-            <aside className="col-2 d-flex flex-column gap-3">
-                <span className="h4 fw-bold mt-2 mb-1">Category</span>
+            <aside className="col-2 d-flex flex-column gap-2">
+                <span className="h4 fw-bold mt-3 mb-1">Category</span>
 
                 <button className="btn-success btn w-100" onClick={handleCreate}>
-                    Add +
+                    Add New
                 </button>
 
-                <div className="d-flex gap-3">
+                <div className="d-flex gap-2">
                     <button
                         className="btn-primary btn w-50 text-nowrap"
                         onClick={handleUpdate}
@@ -209,8 +211,8 @@ export default function Categories() {
                     </button>
                 </div>
 
-                <div className="card">
-                    <div className="card-header">Search</div>
+                <div className="card shadow-sm border">
+                    <div className="card-header bg-light fw-bold small text-uppercase">Search</div>
                     <ul className="list-group list-group-flush">
                         <li className="list-group-item">
                             <input
@@ -293,7 +295,12 @@ export default function Categories() {
                         name="parentId"
                         className="form-select"
                         value={formData.parentId || ""}
-                        onChange={handleInputChange}
+                        onChange={(e) => {
+                            setFormData({
+                                ...formData,
+                                parentId: e.target.value
+                            });
+                        }}
                     >
                         <option value="">None</option>
                         {rootCategories

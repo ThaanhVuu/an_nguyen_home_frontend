@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import BootstrapJsLoader from "@/utils/BootstrapJsLoader";
 
+
 // const geistSans = Geist({
 //     variable: "--font-geist-sans",
 //     subsets: ["latin"],

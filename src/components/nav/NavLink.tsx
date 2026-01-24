@@ -9,7 +9,7 @@ export function NavLink({items}: NavProps){
         <ul className={"navbar-nav ps-4 gap-3"}>
             {items.map((item) => (
                 <li key={item.href} className="nav-item">
-                    <Link className={`nav-link fw-semibold ${pathName == item.href ? "text-success" : ""}`} href={item.href}>
+                    <Link className={`nav-link fw-semibold ${pathName == item.href ? "text-success" : ""}`} href={item.href || "#"}>
                         {item.label}
                     </Link>
                 </li>

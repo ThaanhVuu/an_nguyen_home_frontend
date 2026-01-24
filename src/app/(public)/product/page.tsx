@@ -54,6 +54,7 @@ export default function ProductPage() {
                             >
                                 <div className="product-card-wrapper">
                                     <Card
+                                        id={item.id}
                                         category={item.categoryName || "??"}
                                         title={item.name}
                                         image={item.images?.[0]?.imageUrl || "https://giadungthuanphat.com/gioi-thieu"}

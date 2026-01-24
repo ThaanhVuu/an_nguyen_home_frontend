@@ -1,117 +1,131 @@
 "use client";
 
-import AddToCartButton from "@/components/button/button";
 import { useState } from "react";
-
+import AddToCartButton from "@/components/button/button";
 
 export default function ProductDetailPage() {
   const [selectedImage, setSelectedImage] = useState(0);
 
   const product = {
-    id: 1,
-    title: "Product #1",
-    price: 160000,
-    oldPrice: 199000,
+    id: "69741c1c2935307a947505f1",
+    categoryId: "69736afffbb7ac2aad8aa26c",
+    categoryName: "Laptop",
+    name: "Asus Tuf 15 506HM",
+    slug: "asus-tuf-15-506hm",
+    description: `<div id="cpsContentSEO">
+  <h2><strong>Laptop ASUS TUF Gaming F15 FX506HM-HN018T - Đẳng cấp chiến binh</strong></h2>
+
+  <p><strong>Laptop Asus TUF Gaming F15 FX506HM-HN018T</strong>
+  là một trong những laptop gaming có hiệu năng vượt trội cùng thiết kế ấn tượng...</p>
+
+  <h3><strong>Thiết kế thanh thoát, thân thiện với game thủ</strong></h3>
+
+  <p>Thiết kế mạnh mẽ với các sọc đỏ, tấm gia cường hình lục giác...</p>
+
+  <p align="center">
+    <img src="https://cdn2.cellphones.com.vn/insecure/rs:fill:0:0/q:100/p…g/laptop/Laptop-Asus-TUF-Gaming-F15-FX506HM-HN018T-1_1_.jpg" />
+  </p>
+
+  <h3><strong>Hiệu năng cực đỉnh, tản nhiệt ổn định</strong></h3>
+
+  <p>Trang bị CPU Intel Core i5, GPU RTX 3060, SSD NVMe...</p>
+
+  <p align="center">
+    <img src="https://cdn2.cellphones.com.vn/insecure/rs:fill:0:0/q:100/p…g/laptop/Laptop-Asus-TUF-Gaming-F15-FX506HM-HN018T-2_1_.jpg" />
+  </p>
+
+  <h2><strong>Mua ngay laptop Asus TUF Gaming F15 giá tốt</strong></h2>
+
+  <p>Hiện tại sản phẩm đang được phân phối chính hãng...</p>
+</div>`,
+    specifications: {
+      RAM: "16GB",
+      CPU: "i7 11800H",
+      GPU: "RTX 3060 3GB",
+      SSD: "512GB",
+      Monitor: "144Hz",
+      Pin: "90000 MAH",
+    },
+    price: 23000000,
+    discount: 1000000,
+    quantity: 99,
+    isActive: true,
     images: [
-      "https://cdnv2.tgdd.vn/mwg-static/dmx/Products/Images/1943/321948/tu-lanh-aqua-660-lit-aqr-m727xagsu1-3-638610676556046960-700x467.jpg",
-      "https://cdnv2.tgdd.vn/mwg-static/dmx/Products/Images/1943/321948/tu-lanh-aqua-660-lit-aqr-m727xagsu1-3-638610676556046960-700x467.jpg",
-      "https://cdnv2.tgdd.vn/mwg-static/dmx/Products/Images/1943/321948/tu-lanh-aqua-660-lit-aqr-m727xagsu1-3-638610676556046960-700x467.jpg",
-      "https://cdnv2.tgdd.vn/mwg-static/dmx/Products/Images/1943/321948/tu-lanh-aqua-660-lit-aqr-m727xagsu1-3-638610676556046960-700x467.jpg",
-    ],
-    category: "Kitchen Appliances",
-    brand: "Happy Time",
-    status: "In stock",
-    description:
-      "1.5L capacity, high power, stainless steel interior safe for health.",
-    detailedDescription: `
-      <h6 class="fw-bold mt-3 mb-2">Premium Quality Design</h6>
-      <p>This product features a modern design with high-quality materials. The stainless steel interior ensures safety and durability for long-term use.</p>
-      
-      <h6 class="fw-bold mt-3 mb-2">Key Features</h6>
-      <ul>
-        <li>High power 1500W for quick heating</li>
-        <li>1.5L large capacity suitable for family use</li>
-        <li>Stainless steel 304 material - safe for health</li>
-        <li>Auto shut-off when water boils</li>
-        <li>Easy to clean and maintain</li>
-      </ul>
-      
-      <h6 class="fw-bold mt-3 mb-2">Warranty & Support</h6>
-      <p>Comes with 12 months warranty and dedicated customer support team ready to assist you.</p>
-    `,
-    specs: [
-      { label: "Capacity", value: "1.5 liters" },
-      { label: "Power", value: "1500W" },
-      { label: "Material", value: "Stainless Steel 304" },
-      { label: "Origin", value: "Vietnam" },
-      { label: "Warranty", value: "12 months" },
+      {
+        imageUrl:
+          "https://cdn.tgdd.vn/Products/Images/44/317709/asus-tuf-gaming-f15-fx507zc4-i5-hn229w-hinh-1-750x500.jpg",
+        altText: "asus tuf f15",
+      },
+      {
+        imageUrl:
+          "https://cdn.tgdd.vn/Products/Images/44/317709/asus-tuf-gaming-f15-fx507zc4-i5-hn229w-hinh-1-750x500.jpg",
+        altText: "asus tuf f15",
+      },
     ],
   };
 
+  const finalPrice = product.price - product.discount;
+
   return (
-    <div className="container mt-4" style={{ marginTop: "5rem" }}>
-      <div className="row g-5">
-        <div className="col-12 col-md-6">
+    <div className="container mt-5">
+  
+      <div className="row g-4">
+    
+        <div className="col-md-6">
           <img
-            src={product.images[selectedImage]}
-            className="img-fluid rounded border"
-            alt={product.title}
+            src={product.images[selectedImage].imageUrl}
+            alt={product.images[selectedImage].altText}
+            className="img-fluid border rounded"
           />
+
           <div className="d-flex gap-2 mt-3">
             {product.images.map((img, index) => (
               <img
                 key={index}
-                src={img}
-                className={`img-thumbnail ${selectedImage === index ? "border-primary border-3" : ""}`}
-                alt={`${product.title} - ${index + 1}`}
+                src={img.imageUrl}
+                alt={img.altText}
+                onClick={() => setSelectedImage(index)}
                 style={{
-                  width: "80px",
-                  height: "80px",
+                  width: 80,
+                  height: 80,
                   objectFit: "cover",
                   cursor: "pointer",
-                  opacity: selectedImage === index ? 1 : 0.6,
+                  border:
+                    selectedImage === index
+                      ? "2px solid #0d6efd"
+                      : "1px solid #ccc",
                 }}
-                onClick={() => setSelectedImage(index)}
               />
             ))}
           </div>
         </div>
 
-        <div className="col-12 col-md-6">
-          <h4 className="fw-bold mb-2">{product.title}</h4>
+        <div className="col-md-6">
+          <h3 className="fw-bold">{product.name}</h3>
 
-          <p className="mb-1">
-            Category: <span className="text-primary">{product.category}</span>
+          <p className="text-muted">
+            Category: <strong>{product.categoryName}</strong>
           </p>
 
-          <h3 className="text-danger fw-bold my-3">
-            {product.price.toLocaleString("en-US")} ₫
+          <h4 className="text-danger fw-bold">
+            {finalPrice.toLocaleString("vi-VN")} ₫
             <span className="text-muted fs-6 text-decoration-line-through ms-2">
-              {product.oldPrice.toLocaleString("en-US")} ₫
+              {product.price.toLocaleString("vi-VN")} ₫
             </span>
-          </h3>
+          </h4>
 
           <p>
             Status:{" "}
-            <span className="text-success fw-semibold">{product.status}</span>
+            <span className="fw-semibold text-success">
+              {product.isActive ? "In stock" : "Out of stock"}
+            </span>
           </p>
 
-          <div className="d-flex align-items-center gap-2 my-3">
-            <span>Quantity:</span>
-            <button className="btn btn-outline-secondary btn-sm">-</button>
-            <input
-              type="text"
-              className="form-control text-center"
-              style={{ width: 60 }}
-              value={1}
-              readOnly
-            />
-            <button className="btn btn-outline-secondary btn-sm">+</button>
-          </div>
+          <p>Available quantity: {product.quantity}</p>
 
-          <div className="d-flex gap-3 mt-4">
-            <AddToCartButton/>
-            <button className="btn btn-outline-secondary px-4">Buy Now</button>
+          <div className="d-flex gap-3 mt-3">
+            <AddToCartButton />
+            <button className="btn btn-outline-secondary">Buy Now</button>
           </div>
         </div>
       </div>
@@ -121,20 +135,21 @@ export default function ProductDetailPage() {
 
         <table className="table table-bordered">
           <tbody>
-            {product.specs.map((item, index) => (
-              <tr key={index}>
-                <th style={{ width: "30%" }}>{item.label}</th>
-                <td>{item.value}</td>
+            {Object.entries(product.specifications).map(([key, value]) => (
+              <tr key={key}>
+                <th style={{ width: "30%" }}>{key}</th>
+                <td>{value}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
       <div className="mt-5">
         <h5 className="fw-bold mb-3">Product Description</h5>
         <div
-          className="p-3 border rounded"
-          dangerouslySetInnerHTML={{ __html: product.detailedDescription }}
+          className="border rounded p-3"
+          dangerouslySetInnerHTML={{ __html: product.description }}
         />
       </div>
     </div>

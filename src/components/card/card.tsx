@@ -8,7 +8,7 @@ import {Product} from "@/app/admin/product/useProducts";
 export default function Card({product}: { product: Product }) {
     return (
         <Link
-            href={`/product-detail/${product.id}`}
+            href={`/product/${product.id}`}
             className="text-decoration-none text-dark"
         >
             <div className="card h-100 product-card">
@@ -24,7 +24,12 @@ export default function Card({product}: { product: Product }) {
                     </div>
 
                     <div className="mt-auto">
-                        <AddToCartButton product={product}/>
+                        <div onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }}>
+                            <AddToCartButton product={product}/>
+                        </div>
                     </div>
                 </div>
             </div>

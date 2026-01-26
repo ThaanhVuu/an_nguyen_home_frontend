@@ -1,16 +1,15 @@
 .container{
   margin-top: 5rem;
 }
+
 zal.container{
     margin-top: 5rem;
 }
-
 
 .product-card-wrapper {
   width: 100%;
   height: 100%;
 }
-
 
 .product-card-wrapper .card {
   flex: 1;

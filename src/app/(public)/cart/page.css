@@ -128,6 +128,7 @@
   height: 32px;
   border: 1px solid #ddd;
   background: #fff;
+    color: #0a0a0a;
   cursor: pointer;
   border-radius: 6px;
 }

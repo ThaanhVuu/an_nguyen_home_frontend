@@ -42,7 +42,7 @@ export default function ProductDetailPage() {
     // 2. Gọi hàm fetch trong useEffect khi có id
     useEffect(() => {
         if (id) {
-            fetchProduct();
+            fetchProduct().then();
         }
     }, [id]);
 
@@ -52,7 +52,7 @@ export default function ProductDetailPage() {
 
     return (
         <div className="container mt-5">
-            <div className="row g-4">
+            <div className="row g-4 mt-5">
                 {/* Hình ảnh sản phẩm */}
                 <div className="col-md-6">
                     <img

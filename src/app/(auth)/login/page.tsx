@@ -14,22 +14,56 @@ export default function Login() {
     const [mode, setMode] = useState<"login" | "register">("login");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [email, setEmail] = useState<string>("")
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [loading, setLoading] = useState(false);
     const [toastMsg, setToastMsg] = useState<string | null>(null);
     const [toastType, setToastType] = useState<ToastType>("error")
     const router = useRouter();
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleRegister = async (e: React.FormEvent)=> {
         e.preventDefault();
-
-        if (!username || !password) {
+        if (!username || !password || !email) {
             setToastMsg("Username and password are required");
             return;
         }
 
         if (mode === "register" && password !== passwordConfirm) {
             setToastMsg("Passwords do not match");
+            return;
+        }
+
+        try {
+            setLoading(true)
+            const res = await axiosClient.post("/register", {
+                username: username,
+                email: email,
+                password: password
+            });
+            console.log(res)
+            setToastType("success");
+            setToastMsg(res.data.message);
+        } catch (err) {
+            setToastType("error");
+
+            if (err instanceof AxiosError) {
+                setToastMsg(
+                    err.response?.data?.message
+                    ?? "Something went wrong"
+                );
+            } else {
+                setToastMsg("Something went wrong");
+            }
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (!username || !password) {
+            setToastMsg("Username and password are required");
             return;
         }
 
@@ -84,11 +118,13 @@ export default function Login() {
                     <span className={"h3 text-white"}>Start a Life of Convenience</span>
                     <p className={"text-white mt-2"}>Join thousands of
                         Vietnamese families in upgrading their homes
-                        with reliable appliances from <span className={"fw-semibold"}>An Nguyen Home</span></p>
+                        with reliable appliances from <span className={"fw-semibold"}>An Nguyen Home</span>
+                    </p>
+                    <a href={"/"} className={"text-info text-end text-decoration-none"}>Go Back</a>
                 </div>
 
                 {/* RIGHT */}
-                <div className="d-flex flex-column p-5">
+                <div className="d-flex flex-column px-5 py-4">
                     <span className={"h3 fw-bolder"}>Welcome Back</span>
                     <p className={`text-muted`}>Enter details to {mode} your account.</p>
                     <div className={"d-flex justify-content-around login-tabs"}>
@@ -102,18 +138,32 @@ export default function Login() {
                         >Register</span>
                     </div>
                     <hr className={`mt-0`}/>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={mode === "register" ? handleRegister : handleLogin}>
                         <div className={"mb-3"}>
                             <label className="form-label">Username</label>
                             <InputCus
+                                className={'form-control-sm'}
                                 placeholder="Enter username"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                             />
                         </div>
+                        {mode === "register" &&
+                            <div className={"mb-3"}>
+                                <label className="form-label">Email</label>
+                                <InputCus
+                                    type={"email"}
+                                    className={'form-control-sm'}
+                                    placeholder="Enter username"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                            </div>
+                        }
                         <div className={"mb-3"}>
                             <label className="form-label">Password</label>
                             <InputCus
+                                className={'form-control-sm'}
                                 type="password"
                                 placeholder="Enter password"
                                 value={password}
@@ -125,6 +175,7 @@ export default function Login() {
                             <div className={"mb-3"}>
                                 <label className="form-label">Confirm password</label>
                                 <InputCus
+                                    className={'form-control-sm'}
                                     type="password"
                                     placeholder="Enter confirm password"
                                     value={passwordConfirm}

@@ -1,7 +1,7 @@
 "use client"
 import { Column, TableCus } from "@/components/TableCus";
 import useProducts, { Product } from "@/app/admin/product/useProducts";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { Pagination } from "@/components/Pagination";
 import ModalClient from "@/components/modal/ModalClient";
 import { useModal } from "@/hooks/useModalClient";
@@ -10,7 +10,7 @@ import Toast, { ToastType } from "@/components/Toast";
 
 import ProductFilter from "./components/ProductFilter"
 import ProductForm from "./components/ProductForm";
-import ProductDetail from "./components/ProductDetail";
+import Image from "next/image";
 
 const INIT_PRODUCT: Product = {
     id: "",
@@ -29,9 +29,7 @@ const INIT_PRODUCT: Product = {
 
 export default function ProductComponent() {
     const ID_MODAL = "productModal";
-    const ID_MODAL_DETAIL = "productDetailModal";
-
-    // --- STATE ---
+// --- STATE ---
     const [toastMsg, setToastMsg] = useState<string | null>(null);
     const [toastType, setToastType] = useState<ToastType>("success");
     const [tempSearch, setTempSearch] = useState<string>("")
@@ -43,9 +41,13 @@ export default function ProductComponent() {
         status: ""
     });
 
+    const [sortInputs, setSortInputs] = useState({
+        sortBy: "createdAt",
+        sortType: "asc" as "asc" | "desc"
+    })
+
     // State SpecsList (Cần giữ ở cha để truyền vào Form và xử lý Save)
     const [specsList, setSpecsList] = useState<{ key: string, value: string }[]>([]);
-    const [detailProduct, setDetailProduct] = useState<Product | null>(null);
 
     // --- HOOKS ---
     const { categories: subCategories } = useCategories(1000, "hasParent");
@@ -59,6 +61,8 @@ export default function ProductComponent() {
         setKeyword,
         setPage,
         setSize,
+        setSortOrder,
+        setSortBy,
         deleteProduct,
         insertProduct,
         updateProduct,
@@ -69,10 +73,31 @@ export default function ProductComponent() {
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
     const { open, close } = useModal(ID_MODAL);
-    const { open: openDetail, close: closeDetail } = useModal(ID_MODAL_DETAIL);
 
     // --- TABLE CONFIG ---
     const columns: Column<Product>[] = [
+        {
+            header: "Image",
+            className: "",
+            render: (product) => (
+                <div style={{ position: 'relative', width: '200px', height: '100px', backgroundColor: '#f0f0f0' }}>
+                    <Image
+                        src={product?.images?.[0]?.imageUrl ?? "https://via.placeholder.com/300x150"}
+                        alt={product?.images?.[0]?.altText ?? "product image"}
+                        // 2. Sử dụng 'fill' thay vì width/height cố định
+                        fill
+                        // 3. CSS quan trọng để giữ tỉ lệ ảnh
+                        style={{
+                            objectFit: 'contain', // 'contain': Hiển thị toàn bộ ảnh, giữ tỉ lệ, có thể tạo khoảng trống.
+                            // Nếu bạn muốn ảnh lấp đầy khung và chấp nhận bị cắt xén, hãy dùng 'cover'
+                            // objectFit: 'cover',
+                        }}
+                        // Thêm sizes để tối ưu hiệu năng (tùy chọn nhưng nên dùng)
+                        sizes="300px"
+                    />
+                </div>
+            )
+        },
         {
             header: "Name",
             className: "fw-bold text-primary",
@@ -85,6 +110,15 @@ export default function ProductComponent() {
             )
         },
         { header: "Category", className: "text-right", accessor: "categoryName" },
+        {
+            header: "Quantity",
+            className: "text-right text-muted",
+            render: (product) => (
+                <div>
+                    <small className={product.quantity < 5 ? "text-danger" : "text-secondary"}>{product.quantity}</small>
+                </div>
+            )
+        },
         {
             header: "Price",
             className: "text-right",
@@ -139,6 +173,11 @@ export default function ProductComponent() {
         setPage(0);
     };
 
+    useEffect(() => {
+        setSortBy(sortInputs.sortBy)
+        setSortOrder(sortInputs.sortType)
+    }, [sortInputs]);
+
     const handleResetFilter = () => {
         setFilterInputs({ category: "", priceFrom: "", priceTo: "", status: "" });
         setFilterCategory("");
@@ -179,15 +218,13 @@ export default function ProductComponent() {
     }
 
     const handleShowDetail = () => {
-        if (selectedIds.length !== 1) {
-            setToastType("error");
-            setToastMsg("Please select exactly one product to view details.");
-            return;
-        }
-        const product = products.find(p => p.id === selectedIds[0]);
-        if (product) {
-            setDetailProduct(product);
-            openDetail();
+        if(selectedIds.length == 1){
+            const id = selectedIds[0];
+            const url = `/product/${id}`;
+
+            // Mở trang trong một tab mới
+            // '_blank' chỉ định mở cửa sổ mới
+            window.open(url, '_blank');
         }
     }
 
@@ -227,21 +264,20 @@ export default function ProductComponent() {
             setToastMsg(message);
         }
     }
-
     // --- RENDER ---
     return (
         <section className={"row container-fluid mt-5"}>
             {/* SIDEBAR (Action Buttons + Search + Filter) */}
-            <aside className={"col-2 d-flex flex-column justify-content-start gap-2"}>
-                <h4 className={`fw-bold mt-3 mb-1`}>Product</h4>
+            <aside className={"col-2 d-flex flex-column justify-content-start gap-1"}>
+                <h4 className={`fw-bold mt-3 mb-0`}>Product</h4>
 
                 <div className={"d-flex gap-2"}>
-                    <button className={`btn btn-success w-50`} onClick={handleAddNew}>Add +</button>
-                    <button className={`btn btn-info w-50 text-white`} disabled={selectedIds.length !== 1} onClick={handleShowDetail}>Detail</button>
+                    <button className={`btn btn-success w-50 fw-bold`} onClick={handleAddNew}>Add +</button>
+                    <button className={`btn btn-info w-50 text-white fw-bold`} disabled={selectedIds.length !== 1} onClick={handleShowDetail}>Detail</button>
                 </div>
                 <div className={"d-flex gap-2"}>
-                    <button className={`btn btn-primary w-50`} disabled={selectedIds.length !== 1} onClick={handleUpdate}>Update</button>
-                    <button className={`btn btn-danger w-50`} disabled={selectedIds.length < 1} onClick={handleDelete}>Delete</button>
+                    <button className={`btn btn-primary w-50 fw-bold`} disabled={selectedIds.length !== 1} onClick={handleUpdate}>Update</button>
+                    <button className={`btn btn-danger w-50 fw-bold`} disabled={selectedIds.length < 1} onClick={handleDelete}>Delete</button>
                 </div>
 
                 {/* Component ProductFilter */}
@@ -254,6 +290,8 @@ export default function ProductComponent() {
                     onApply={handleApplyFilter}
                     onReset={handleResetFilter}
                     subCategories={subCategories}
+                    sortInputs={sortInputs}
+                    setSortInput={setSortInputs}
                 />
             </aside>
 
@@ -296,17 +334,6 @@ export default function ProductComponent() {
                         setSpecsList={setSpecsList}
                     />
                 </ModalClient>
-
-                {/* MODAL DETAIL */}
-                {detailProduct && (
-                    <ModalClient
-                        id={ID_MODAL_DETAIL}
-                        title={`Detail: ${detailProduct.name}`}
-                        footer={<button type="button" className="btn btn-secondary" onClick={closeDetail}>Close</button>}
-                    >
-                        <ProductDetail product={detailProduct} />
-                    </ModalClient>
-                )}
             </div>
             {toastMsg && <Toast message={toastMsg} type={toastType} onClose={() => setToastMsg(null)} />}
         </section>

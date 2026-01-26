@@ -1,10 +1,11 @@
-import axios, {AxiosError} from "axios";
-import { cookies } from "next/headers";
+import axios from "axios";
+import {cookies} from "next/headers";
 import {NextResponse} from "next/server";
 import {handleApiAxiosError} from "@/utils/handleApiAxiosError";
+import {parse} from "set-cookie-parser";
 
 export async function POST(req: Request) {
-    try{
+    try {
         const body = await req.json();
 
         const res = await axios.post(
@@ -21,8 +22,25 @@ export async function POST(req: Request) {
             path: "/"
         });
 
-        return NextResponse.json({ message: res.data.message });
-    }catch (err) {
+        const setCookieHeader = res.headers[`set-cookie`];
+        if (setCookieHeader) {
+            const parsedCookie = parse(setCookieHeader);
+            parsedCookie.forEach(cookie => {
+                cookieStore.set({
+                    name: cookie.name,
+                    value: cookie.value,
+                    path: cookie.path || "/", // Ưu tiên path của backend, fallback về "/"
+                    httpOnly: cookie.httpOnly, // Lấy theo backend
+                    secure: cookie.secure,     // Lấy theo backend
+                    maxAge: cookie.maxAge,     // Thời gian sống (giây)
+                    expires: cookie.expires,   // Thời điểm hết hạn (Date)
+                    sameSite: cookie.sameSite as "strict" | "lax" | "none" // Ép kiểu cho Next.js
+                })
+            })
+        }
+
+        return NextResponse.json({message: res.data.message});
+    } catch (err) {
         return handleApiAxiosError(err);
     }
 }

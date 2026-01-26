@@ -28,7 +28,7 @@ export function TableCus<T extends { [key: string]: any }>({
                                                                onSelectOne,
                                                                rowKey = "id",
                                                                emptyMessage = "No data found.",
-                                                               maxHeight // 🆕 Nhận prop maxHeight
+                                                               maxHeight = "500px" // 🆕 Nhận prop maxHeight
                                                            }: DataTableProps<T>) {
 
     const isAllSelected = data.length > 0 && data.every((item) => selectedIds.includes(item[rowKey]));

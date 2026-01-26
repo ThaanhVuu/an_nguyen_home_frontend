@@ -3,8 +3,7 @@
 import {useEffect, useState} from "react";
 import AxiosClient from "@/libs/axios/axios.client";
 import axiosClient from "@/libs/axios/axios.client";
-import {AxiosError} from "axios";
-import {error} from "next/dist/build/output/log";
+import {PaginationData} from "@/types/pagination";
 
 export interface Category {
     id: string;
@@ -13,15 +12,6 @@ export interface Category {
     parentId: string | null;
     parentName: string | number;
     slug: string;
-
-}
-
-export interface PaginationData {
-    data: Category[];
-    page: number;
-    size: number;
-    totalElements: number;
-    totalPages: number;
 }
 
 export type CategoryFilterType = "root" | "hasParent" | null | string;
@@ -34,11 +24,11 @@ interface CategoryParams {
     keyword?: string;
 }
 
-function useCategories() {
+function useCategories(initSize?: number, initFilter?: string | null) {
 // State quản lý Params
     const [page, setPage] = useState<number>(0);
-    const [size, setSize] = useState<number>(10);
-    const [filter, setFilter] = useState<CategoryFilterType>(null);
+    const [size, setSize] = useState<number>(initSize || 10);
+    const [filter, setFilter] = useState<CategoryFilterType>(initFilter || "");
     const [keyword, setKeyword] = useState<string>(""); // Thêm state keyword
 
     // State kết quả
@@ -72,7 +62,6 @@ function useCategories() {
             const res = await AxiosClient.put(`/categories`, input);
 
             setRefreshTrigger(prev => prev + 1);
-            console.log(res);
             return res.data;
         } catch (err: any) {
             throw (err);
@@ -108,7 +97,7 @@ function useCategories() {
 
                 const response = await AxiosClient.get("/categories", {params})
 
-                const result: PaginationData = response.data?.data;
+                const result: PaginationData<Category> = response.data?.data;
 
                 if (result) {
                     setCategories(result.data || []);
@@ -130,7 +119,6 @@ function useCategories() {
             try {
                 setLoading(true);
                 const response = await axiosClient.get("/categories/root");
-                console.log(response.data)
                 setRootCategories(response.data);
             } catch (e) {
                 console.log(e);

@@ -1,22 +1,24 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import {useEffect, useRef} from "react";
 
 type ModalProps = {
-    id: string;
-    title?: string;
     children: React.ReactNode;
     footer?: React.ReactNode;
+    id: string;
     onClose?: () => void;
+    size?: "sm" | "lg" | "xl" | "fullscreen";
+    title?: string;
 };
 
 export default function ModalClient({
-                                  id,
-                                  title,
-                                  children,
-                                  footer,
-                                  onClose,
-                              }: ModalProps) {
+                                        id,
+                                        title,
+                                        children,
+                                        footer,
+                                        onClose,
+                                        size
+                                    }: ModalProps) {
     const modalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -30,6 +32,8 @@ export default function ModalClient({
         };
     }, [onClose]);
 
+    const sizeClass = size ? `modal-${size}` : "";
+
     return (
         <div
             ref={modalRef}
@@ -38,7 +42,7 @@ export default function ModalClient({
             tabIndex={-1}
             aria-hidden="true"
         >
-            <div className="modal-dialog modal-dialog-centered">
+            <div className={`modal-dialog modal-dialog-centered modal-dialog-scrollable ${sizeClass}`}>
                 <div className="modal-content">
 
                     {title && (

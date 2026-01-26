@@ -1,0 +1,291 @@
+.checkout-page {
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 60px;
+  margin: 5rem auto 0;
+}
+
+/* card base */
+.card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.05);
+  margin-bottom: 24px;
+}
+
+/* card title */
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.step {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e9f1ff;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.login {
+  margin-left: auto;
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* form layout */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full {
+  grid-column: span 2;
+}
+
+label {
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 6px;
+}
+
+input, select {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  outline: none;
+  box-sizing: border-box;
+}
+
+input:focus, select:focus {
+  border-color: #2563eb;
+}
+
+/* option card */
+.option {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.option.column {
+  flex-direction: column;
+  gap: 10px;
+}
+
+.option.active {
+  border-color: #2563eb;
+  background: #f0f6ff;
+}
+
+.option p {
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* flex row */
+.row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.row.space-between {
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* payment header */
+.payment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.payment-title b {
+  font-size: 16px;
+  display: block;
+}
+
+.payment-title p {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+/* card logos */
+.payment-logos {
+  display: flex;
+  gap: 8px;
+}
+
+/* badge */
+.badge {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #fff;
+}
+
+.badge.visa {
+  background: #1a2b7b;
+}
+
+.badge.mc {
+  background: #d43b30;
+}
+
+/* card inputs */
+.card-input.full {
+  width: 100%;
+}
+
+.card-input-row {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.card-input-row input {
+  flex: 1;
+}
+
+/* checkout right */
+.checkout-right {
+  width: 420px;
+  align-self: flex-start;
+}
+
+/* summary */
+.summary-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.summary-item,
+.summary-product {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.summary-item img,
+.summary-product img {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.summary-product .info {
+  flex: 1;
+  font-size: 14px;
+}
+
+.summary-product .info span,
+.summary-product .info small {
+  display: block;
+  color: #6b7280;
+}
+
+.summary-product .price {
+  font-weight: 600;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin: 8px 0;
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 16px 0;
+}
+
+.summary-total b {
+  color: #f0643b;
+}
+
+.free {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+/* voucher */
+.voucher label {
+  font-size: 14px;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.voucher-row {
+  display: flex;
+  gap: 8px;
+}
+
+.voucher-row input {
+  flex: 1;
+}
+
+.voucher-row button {
+  padding: 0 16px;
+  border-radius: 8px;
+  border: none;
+  background: #f3f4f6;
+  cursor: pointer;
+}
+
+/* button */
+.btn-primary {
+  width: 100%;
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: #ef5a3c;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-primary.full {
+  margin-top: 8px;
+}
+
+/* secure note */
+.secure {
+  text-align: center;
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 10px;
+}

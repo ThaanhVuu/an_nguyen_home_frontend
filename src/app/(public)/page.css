@@ -1,6 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+    --color-primary: #a36b3f;
+    /* Warm Earthy Brown/Orange */
+    --color-primary-dark: #8c5832;
+    --color-text-dark: #2c2c2c;
+    --color-bg-light: #f8f7f5;
+    /* Warm off-white */
+}
+
+/* Color Utilities */
+.text-primary-custom {
+    color: var(--color-primary) !important;
+}
+
+.bg-primary-custom {
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+}
+
+.btn-primary-custom {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.btn-primary-custom:hover {
+    background-color: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
+    color: #fff;
+}
+
+.btn-outline-primary-custom {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.btn-outline-primary-custom:hover {
+    background-color: var(--color-primary);
+    color: #fff;
+}
+
+/* HERO SECTION */
 .video-hero {
+    position: relative;
     width: 100%;
-    height: 100svh;      /* full màn hình, không scroll */
+    height: 100vh;
+    overflow: hidden;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+}
+
+/* FONT UTILITIES */
+.font-serif {
+    font-family: 'Playfair Display', serif;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+/* STORY SECTION */
+.story-image {
+    height: 100%;
+    min-height: 400px;
+    object-fit: cover;
+    border-radius: 0.375rem;
+    /* default rounded */
+}
+
+/* CATEGORY GRID SOPHISTICATION */
+.category-card {
+    border: 1px solid #e5e5e5;
+    border-radius: 0.5rem;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    background-color: #fff;
+}
+
+.category-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--color-primary);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+}
+
+.category-icon-wrapper {
+    color: #888;
+    transition: all 0.4s ease;
+}
+
+.category-card:hover .category-icon-wrapper {
+    color: var(--color-primary);
+    transform: scale(1.1);
+}
+
+.category-title {
+    color: var(--color-text-dark);
+    transition: color 0.3s ease;
+}
+
+.category-card:hover .category-title {
+    color: var(--color-primary-dark);
+}
+
+.category-link {
+    color: #888;
+    transition: color 0.3s ease;
+}
+
+.category-card:hover .category-link {
+    color: var(--color-primary);
+}
+
+.arrow-icon {
+    display: inline-block;
+    transition: transform 0.3s ease;
+    opacity: 0;
+    transform: translateX(-10px);
+}
+
+.category-card:hover .arrow-icon {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* MINIMALIST PRODUCT CARD */
+.product-card-minimal {
+    border: none !important;
+    background: transparent !important;
+}
+
+.product-card-minimal .card-img-top {
+    border-radius: 0.375rem;
+    /* default rounded */
+    transition: transform 0.6s ease;
+}
+
+.product-card-minimal:hover .card-img-top {
+    transform: scale(1.05);
 }
 
 .video-bg {
@@ -9,29 +146,141 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    z-index: -9999;
+    z-index: -1;
 }
 
-.video-hero::after {
-    content: "";
+/* Overlay gradient xịn hơn */
+.video-hero .overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-            to right,
-            rgba(0, 0, 0, 0.55),
-            rgba(0, 0, 0, 0.25)
-    );
-    z-index: 0;
-}
-
-.video-hero {
-    color: #ffffff;
+    background: linear-gradient(to right,
+            rgba(0, 0, 0, 0.8) 0%,
+            rgba(0, 0, 0, 0.4) 50%,
+            rgba(0, 0, 0, 0.1) 100%);
+    z-index: 1;
 }
 
 .hero-content {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     height: 100%;
-    display: flex;
-    align-items: center;      /* căn giữa theo chiều dọc */
+}
+
+/* Typography Enhancements */
+.ls-2 {
+    letter-spacing: 2px;
+}
+
+.fw-bold {
+    font-weight: 700 !important;
+}
+
+/* ANIMATIONS */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 40px, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.animate-up {
+    animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    opacity: 0;
+    /* Ẩn ban đầu */
+}
+
+.delay-100 {
+    animation-delay: 0.1s;
+}
+
+.delay-200 {
+    animation-delay: 0.2s;
+}
+
+.delay-300 {
+    animation-delay: 0.3s;
+}
+
+/* SCROLL REVEAL ANIMATION */
+.reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 1s ease;
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* IMAGE ZOOM EFFECT */
+.img-zoom {
+    overflow: hidden;
+    position: relative;
+    border-radius: 0.375rem;
+    /* Match rounded */
+}
+
+.img-zoom img {
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.img-zoom:hover img {
+    transform: scale(1.1);
+}
+
+/* DECORATIVE BACKGROUNDS */
+.bg-blob-pattern {
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-blob-pattern::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(var(--color-primary), 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.bg-blob-pattern::after {
+    content: '';
+    position: absolute;
+    bottom: -50px;
+    left: -50px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(var(--color-primary), 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+/* HOVER EFFECTS */
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    border-color: transparent;
+}
+
+/* UTILITIES */
+.rounded-4 {
+    border-radius: 1rem !important;
+}
+
+.btn-lg {
+    padding: 0.8rem 2rem;
+    font-weight: 600;
 }

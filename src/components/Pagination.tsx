@@ -1,13 +1,13 @@
 import React from "react";
 
 interface PaginationProps {
-    currentPage: number;      // Trang hiện tại (0-based)
-    totalPages: number;       // Tổng số trang
-    pageSize: number;         // Kích thước trang (size)
-    totalElements: number;    // Tổng số bản ghi
-    onPageChange: (page: number) => void; // Hàm xử lý khi chuyển trang
-    onSizeChange: (size: number) => void; // Hàm xử lý khi đổi size
-    pageSizeOptions?: number[]; // Các option cho select size (tùy chọn)
+    currentPage: number;
+    totalPages: number;
+    pageSize: number;
+    totalElements: number;
+    onPageChange: (page: number) => void;
+    onSizeChange: (size: number) => void;
+    pageSizeOptions?: number[];
 }
 
 export const Pagination = ({
@@ -17,22 +17,38 @@ export const Pagination = ({
                                totalElements,
                                onPageChange,
                                onSizeChange,
-                               pageSizeOptions = [5, 10, 20, 50] // Mặc định
+                               pageSizeOptions = [5, 10, 20, 50]
                            }: PaginationProps) => {
 
     // Tính toán hiển thị "Showing X to Y of Z"
     const startItem = totalElements === 0 ? 0 : currentPage * pageSize + 1;
     const endItem = Math.min((currentPage + 1) * pageSize, totalElements);
 
+    // --- HÀM MỚI: Xử lý chuyển trang kèm Scroll ---
+    const handlePageClick = (pageNumber: number) => {
+        // 1. Gọi hàm xử lý logic của cha (fetch data)
+        onPageChange(pageNumber);
+
+        // 2. Scroll lên đầu trang
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth" // "smooth" để trượt mượt mà, hoặc "auto" để nhảy ngay lập tức
+        });
+    };
+
     return (
         <div className="d-flex justify-content-between align-items-center mt-3 p-2 bg-light rounded border">
-            {/* Bên trái: Chọn Size và hiển thị thông tin */}
+            {/* Bên trái: Chọn Size */}
             <div className="d-flex align-items-center gap-3">
                 <select
                     className="form-select form-select-sm"
                     style={{ width: "80px" }}
                     value={pageSize}
-                    onChange={(e) => onSizeChange(Number(e.target.value))}
+                    onChange={(e) => {
+                        onSizeChange(Number(e.target.value));
+                        // Opsional: Nếu đổi size cũng muốn scroll lên top thì gọi lệnh scroll ở đây luôn
+                        // window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
                 >
                     {pageSizeOptions.map((opt) => (
                         <option key={opt} value={opt}>
@@ -54,15 +70,15 @@ export const Pagination = ({
                     <li className={`page-item ${currentPage === 0 ? "disabled" : ""}`}>
                         <button
                             className="page-link"
-                            onClick={() => onPageChange(currentPage - 1)}
+                            // SỬ DỤNG HÀM MỚI Ở ĐÂY
+                            onClick={() => handlePageClick(currentPage - 1)}
                             disabled={currentPage === 0}
                         >
                             &laquo;
                         </button>
                     </li>
 
-                    {/* Danh sách các trang (Cơ bản) */}
-                    {/* Lưu ý: Nếu totalPages quá lớn (ví dụ 100), bạn nên xử lý logic hiển thị dấu "..." ở đây */}
+                    {/* Danh sách các trang */}
                     {Array.from({ length: totalPages }, (_, index) => (
                         <li
                             key={index}
@@ -70,7 +86,8 @@ export const Pagination = ({
                         >
                             <button
                                 className="page-link"
-                                onClick={() => onPageChange(index)}
+                                // SỬ DỤNG HÀM MỚI Ở ĐÂY
+                                onClick={() => handlePageClick(index)}
                             >
                                 {index + 1}
                             </button>
@@ -81,7 +98,8 @@ export const Pagination = ({
                     <li className={`page-item ${currentPage === totalPages - 1 || totalPages === 0 ? "disabled" : ""}`}>
                         <button
                             className="page-link"
-                            onClick={() => onPageChange(currentPage + 1)}
+                            // SỬ DỤNG HÀM MỚI Ở ĐÂY
+                            onClick={() => handlePageClick(currentPage + 1)}
                             disabled={currentPage === totalPages - 1 || totalPages === 0}
                         >
                             &raquo;

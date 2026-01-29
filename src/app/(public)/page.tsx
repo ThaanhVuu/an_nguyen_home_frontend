@@ -1,7 +1,14 @@
+"use client"
+
 import "./page.css";
 import Link from "next/link";
+import {useEffect} from "react";
 
 export default function Home() {
+    useEffect(() => {
+
+    }, []);
+
     return (
         <section id={"home"} className="video-hero">
             {/* Video background */}

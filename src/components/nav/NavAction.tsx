@@ -5,9 +5,9 @@ import Link from "next/link";
 export function NavActions() {
     return (
         <ul className="d-flex gap-3 navbar-nav align-items-center">
-            <li className={"nav-item "}>
-                <InputCus placeholder="Search..." className={"w-auto shadow-sm input-blur"}/>
-            </li>
+            {/*<li className={"nav-item "}>*/}
+            {/*    <InputCus placeholder="Search..." className={"w-auto shadow-sm input-blur"}/>*/}
+            {/*</li>*/}
             <li className={"nav-item"}>
                 <Link href={"/cart"} className={"nav-link"}><ShoppingBag/></Link>
             </li>

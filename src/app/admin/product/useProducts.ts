@@ -226,7 +226,7 @@ export default function useProducts() {
         insertProduct,
         updateProduct,
         deleteProduct,
-
+        setLoading,
         // Manual Reload nếu cần
         refresh: () => setRefreshTrigger(prev => prev + 1)
     };

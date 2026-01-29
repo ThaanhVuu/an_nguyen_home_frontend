@@ -1,20 +1,20 @@
 "use client";
 
-import React, { useEffect, useState, Suspense } from "react";
+import React, {useEffect, useState, Suspense} from "react";
 import "./product.css";
 import Card from "@/components/card/card";
 import Link from "next/link";
 import useProducts from "@/app/admin/product/useProducts";
-import { Pagination } from "@/components/Pagination";
+import {Pagination} from "@/components/Pagination";
 import ProductFilter from "@/app/admin/product/components/ProductFilter";
 import useCategories from "@/app/admin/category/useCategories";
 import FilterSidebar from "@/components/sidebar/FilterSidebar";
-import { useSearchParams } from "next/navigation";
+import {useSearchParams} from "next/navigation";
 
 export default function ProductPage() {
     return (
         <Suspense fallback={<div>Loading...</div>}>
-            <ProductContent />
+            <ProductContent/>
         </Suspense>
     )
 }
@@ -29,6 +29,8 @@ function ProductContent() {
         setPriceMax,
         setKeyword,
         setSize,
+        loading,
+        setLoading,
         setSortBy,
         setSortOrder,
         products
@@ -44,7 +46,7 @@ function ProductContent() {
         priceTo: "" as number | "",
         status: ""
     });
-    const { categories: subCategories } = useCategories(1000, "hasParent");
+    const {categories: subCategories} = useCategories(1000, "hasParent");
     const searchParams = useSearchParams();
 
     // Sync URL params to State on mount or URL change
@@ -57,7 +59,8 @@ function ProductContent() {
 
         if (categoryParam) {
             setFilterCategory(categoryParam);
-            setFilterInputs(prev => ({ ...prev, category: categoryParam }));
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setFilterInputs(prev => ({...prev, category: categoryParam}));
         }
         if (keywordParam) {
             setKeyword(keywordParam);
@@ -65,11 +68,11 @@ function ProductContent() {
         }
         if (priceFromParam) {
             setPriceMin(Number(priceFromParam));
-            setFilterInputs(prev => ({ ...prev, priceFrom: Number(priceFromParam) }));
+            setFilterInputs(prev => ({...prev, priceFrom: Number(priceFromParam)}));
         }
         if (priceToParam) {
             setPriceMax(Number(priceToParam));
-            setFilterInputs(prev => ({ ...prev, priceTo: Number(priceToParam) }));
+            setFilterInputs(prev => ({...prev, priceTo: Number(priceToParam)}));
         }
         if (sortParam) {
             const [field, order] = sortParam.split(",");
@@ -94,7 +97,7 @@ function ProductContent() {
     };
 
     const handleResetFilter = () => {
-        setFilterInputs({ category: "", priceFrom: "", priceTo: "", status: "" });
+        setFilterInputs({category: "", priceFrom: "", priceTo: "", status: ""});
         setFilterCategory("");
         setFilterStatus("");
         setPriceMin("");
@@ -110,7 +113,7 @@ function ProductContent() {
 
     return (
         <div className="container">
-            <nav aria-label="breadcrumb" className="mb-3" style={{ marginTop: "5rem" }}>
+            <nav aria-label="breadcrumb" className="mb-3" style={{marginTop: "5rem"}}>
                 <ol className="breadcrumb mb-0">
                     <li className="breadcrumb-item">
                         <Link href="/" className="text-decoration-none text-dark">
@@ -145,18 +148,28 @@ function ProductContent() {
 
                 <div className="col-12 col-md-8 col-lg-9">
                     <div className="row g-4">
-                        {products.map((item) => (
-                            <div
-                                key={item.id}
-                                className="col-12 col-sm-6 col-lg-4"
-                            >
-                                <div className="product-card-wrapper">
-                                    <Card
-                                        product={item}
-                                    />
+                        {loading ? (
+                            Array.from({length: 6}).map((_, index) => (
+                                <div key={index} className="col-12 col-sm-6 col-lg-4">
+                                    <div className="checkout-page" style={{padding: '2rem'}}>Loading...</div>
                                 </div>
-                            </div>
-                        ))}
+                            ))
+                        ) : (
+                            // Nếu load xong: Hiển thị sản phẩm thật
+                            products.length > 0 ? (
+                                products.map((item) => (
+                                    <div key={item.id} className="col-12 col-sm-6 col-lg-4">
+                                        <div className="product-card-wrapper">
+                                            <Card product={item}/>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="col-12 text-center py-5">
+                                    <p className="text-muted">Không tìm thấy sản phẩm nào.</p>
+                                </div>
+                            )
+                        )}
                     </div>
 
                 </div>

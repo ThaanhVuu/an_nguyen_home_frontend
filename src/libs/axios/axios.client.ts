@@ -30,6 +30,10 @@ axiosClient.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
+        if (originalRequest.url.includes("/refresh")) {
+            return Promise.reject(error);
+        }
+
         if (error.response?.status === 401 && !originalRequest._retry) {
             if (isRefreshing) {
                 return new Promise(function (resolve, reject) {
@@ -47,15 +51,23 @@ axiosClient.interceptors.response.use(
             isRefreshing = true;
 
             try {
-                // Call the NEXT.js API route which handles the refresh token cookie
-                await axiosClient.post("/auth/refresh");
-                
+                // Gọi API refresh (URL thực tế: /api/refresh)
+                await axiosClient.post("/refresh");
+
+                // Refresh thành công, browser tự lưu cookie mới.
+                // Xử lý các request đang đợi
                 processQueue(null);
+
+                // Gọi lại request ban đầu
                 return axiosClient(originalRequest);
             } catch (err) {
                 processQueue(err, null);
-                // Optional: Redirect to login or handle logout here if needed
-                // window.location.href = '/login'; 
+
+                // Nếu refresh thất bại (hết hạn hẳn), logout user
+                if (typeof window !== "undefined") {
+                    // window.location.href = '/login'; // Bỏ comment dòng này khi muốn auto logout
+                }
+
                 return Promise.reject(err);
             } finally {
                 isRefreshing = false;

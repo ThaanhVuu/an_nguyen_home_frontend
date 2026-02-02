@@ -6,8 +6,7 @@ export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
         const api = await axiosWithAuth();
-        // Forward all query params (page, size, keyword, status)
-        const res = await api.get(`/order/orders?${searchParams.toString()}`);
+        const res = await api.get(`/order/orders`,{params: searchParams});
         return NextResponse.json(res.data);
     } catch (error) {
         return handleApiAxiosError(error);

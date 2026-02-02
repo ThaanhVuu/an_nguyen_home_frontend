@@ -9,6 +9,7 @@ export interface Category {
     id: string;
     isActive: boolean;
     name: string;
+    imgUrl?: string | "https://placehold.co/300"
     parentId: string | null;
     parentName: string | number;
     slug: string;

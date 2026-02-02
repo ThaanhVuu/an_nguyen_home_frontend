@@ -88,7 +88,7 @@ export default function ProductDetailPage() {
                 <div className="col-md-6">
                     <h3 className="fw-bold">{product.name}</h3>
                     <p className="text-muted">
-                        Danh mục: <strong>{product.categoryName}</strong>
+                        Category: <strong>{product.categoryName}</strong>
                     </p>
 
                     <h4 className="text-danger fw-bold">
@@ -101,13 +101,13 @@ export default function ProductDetailPage() {
                     </h4>
 
                     <p>
-                        Trạng thái:{" "}
+                        Status:{" "}
                         <span className={`fw-semibold ${product.isActive ? "text-success" : "text-danger"}`}>
                             {product.isActive ? "Còn hàng" : "Hết hàng"}
                         </span>
                     </p>
 
-                    <p>Số lượng còn lại: {product.quantity}</p>
+                    <p>Remaining quantity: {product.quantity}</p>
 
                     <div className="d-flex gap-3 mt-3">
                         <AddToCartButton product={product} />
@@ -118,7 +118,7 @@ export default function ProductDetailPage() {
 
             {/* Thông số kỹ thuật */}
             <div className="mt-5">
-                <h5 className="fw-bold mb-3">Thông số kỹ thuật</h5>
+                <h5 className="fw-bold mb-3">Specifications</h5>
                 <table className="table table-bordered">
                     <tbody>
                     {Object.entries(product.specifications || {}).length > 0 ? (
@@ -129,7 +129,7 @@ export default function ProductDetailPage() {
                             </tr>
                         ))
                     ) : (
-                        <tr><td colSpan={2}>Chưa có thông số kỹ thuật</td></tr>
+                        <tr><td colSpan={2}>No specifications available yet.</td></tr>
                     )}
                     </tbody>
                 </table>
@@ -137,7 +137,7 @@ export default function ProductDetailPage() {
 
             {/* Mô tả sản phẩm */}
             <div className="mt-5 mb-5">
-                <h5 className="fw-bold mb-3">Mô tả sản phẩm</h5>
+                <h5 className="fw-bold mb-3">Product description</h5>
                 <div
                     className="border rounded p-3 bg-white"
                     dangerouslySetInnerHTML={{ __html: product.description || "" }}

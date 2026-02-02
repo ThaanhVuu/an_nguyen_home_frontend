@@ -8,7 +8,7 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
         const body = await request.json();
         const api = await axiosWithAuth();
         // POST /payments/{orderId}/record with body { amount, transactionId }
-        const res = await api.post(`/payments/${id}/record`, body);
+        const res = await api.post(`order/payments/${id}/record`, body);
         return NextResponse.json(res.data);
     } catch (error) {
         return handleApiAxiosError(error);

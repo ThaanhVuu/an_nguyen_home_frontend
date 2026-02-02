@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import useOrders, { OrderResponse } from "@/app/admin/order/useOrders";
 import { Column, TableCus } from "@/components/TableCus";
 import { useModal } from "@/hooks/useModalClient";
@@ -30,7 +30,8 @@ export default function OrderComponent() {
         setStatus,
         cancelOrder,
         confirmPayment,
-        recordPayment
+        recordPayment,
+        updateStatus
     } = useOrders();
 
     const [tempSearch, setTempSearch] = useState("");
@@ -219,32 +220,98 @@ export default function OrderComponent() {
         );
     }
 
+    const handleUpdateStatus = async (newStatus: string) => {
+        if (!selectedOrder) return;
+        try {
+            await updateStatus(selectedOrder.id, newStatus);
+            setToastType("success");
+            setToastMsg(`Status updated to ${newStatus}`);
+            // Optimistically update or wait for refresh. Refresh is better but might close modal.
+            // Let's close modal to refresh list? Or just let user see list update.
+            closeDetail();
+        } catch (e: any) {
+            setToastType("error");
+            setToastMsg(e.response?.data?.message || "Failed to update status");
+        }
+    };
+
     // Detail Modal Footer with Payment Actions
     const renderModalFooter = () => {
         if (!selectedOrder) return null;
+
+        // Logic kiểm tra điều kiện hiển thị nút
         const canCancel = ['PENDING', 'PENDING_PAYMENT'].includes(selectedOrder.status);
         const canPay = ['PENDING', 'PENDING_PAYMENT'].includes(selectedOrder.status);
 
         return (
-            <div>
-                <button type="button" className="btn btn-secondary me-2" onClick={closeDetail}>
-                    Close
-                </button>
-                {canPay && (
-                    <>
-                        <button type="button" className="btn btn-warning me-2" onClick={openRecordPayment}>
-                            Record Payment
+            <div className="container-fluid px-0">
+                <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
+
+                    {/* --- NHÓM TRÁI: QUẢN LÝ TRẠNG THÁI --- */}
+                    <div className="d-flex align-items-center p-2 bg-light rounded border">
+                    <span className="small text-muted text-uppercase fw-bold me-2" style={{fontSize: '0.75rem'}}>
+                        Cập nhật trạng thái:
+                    </span>
+                        <select
+                            className="form-select form-select-sm border-0 bg-transparent fw-bold text-primary"
+                            style={{ width: 'auto', boxShadow: 'none', cursor: 'pointer' }}
+                            value={selectedOrder.status}
+                            onChange={(e) => handleUpdateStatus(e.target.value)}
+                        >
+                            <option value="PENDING">🕒 PENDING</option>
+                            <option value="PENDING_PAYMENT">💳 PENDING PAYMENT</option>
+                            <option value="CONFIRMED_PAYMENT">💰 CONFIRMED PAYMENT</option>
+                            <option value="SHIPPING">🚚 SHIPPING</option>
+                            <option value="COMPLETED">✅ COMPLETED</option>
+                            <option value="CANCELLED">❌ CANCELLED</option>
+                        </select>
+                    </div>
+
+                    {/* --- NHÓM PHẢI: CÁC HÀNH ĐỘNG (ACTION BUTTONS) --- */}
+                    <div className="d-flex align-items-center gap-2">
+                        {/* Nút Hủy (Nguy hiểm - Đặt xa nút chính) */}
+                        {canCancel && (
+                            <button
+                                type="button"
+                                className="btn btn-outline-danger btn-sm px-3 me-2"
+                                onClick={handleCancelOrder}
+                            >
+                                Hủy đơn
+                            </button>
+                        )}
+
+                        {/* Nhóm nút Thanh toán */}
+                        {canPay && (
+                            <div className="btn-group me-2" role="group">
+                                <button
+                                    type="button"
+                                    className="btn btn-outline-primary btn-sm"
+                                    onClick={openRecordPayment}
+                                    title="Ghi nhận 1 phần thanh toán"
+                                >
+                                    Ghi nhận GD
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-primary btn-sm fw-bold"
+                                    onClick={handleConfirmPayment}
+                                    title="Xác nhận đã trả hết tiền"
+                                >
+                                    Xác nhận đã TT
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Nút Đóng (Màu xám, luôn nằm ngoài cùng hoặc trong cùng tùy style, ở đây để cuối để dễ thoát) */}
+                        <button
+                            type="button"
+                            className="btn btn-secondary btn-sm px-4"
+                            onClick={closeDetail}
+                        >
+                            Đóng
                         </button>
-                        <button type="button" className="btn btn-primary me-2" onClick={handleConfirmPayment}>
-                            Confirm Paid
-                        </button>
-                    </>
-                )}
-                {canCancel && (
-                    <button type="button" className="btn btn-danger" onClick={handleCancelOrder}>
-                        Cancel Order
-                    </button>
-                )}
+                    </div>
+                </div>
             </div>
         );
     }

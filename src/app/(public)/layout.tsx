@@ -5,6 +5,7 @@ const itemNavs: NavItem[] = [
     { label: "Home", href: "/" },
     { label: "Category", href: "/category" },
     { label: "Product", href: "/product" },
+    { label: "Order", href: "/order"},
     { label: "About", href: "/about" },
 ];
 

@@ -4,10 +4,36 @@ meta {
   seq: 1
 }
 
-get {
-  url: http://localhost:3000/api/orders
-  body: none
+post {
+  url: http://localhost:8083/orders
+  body: json
   auth: inherit
+}
+
+body:json {
+  {
+      "clientRequestId": "00abe28c-f77a-44b5-9a76-b8fc8a05d763",
+      "items": [
+          {
+              "productId": "697ce539a083ad3904bd8440",
+              "productName": "341L UltimateTaste 300 top freezer refrigerator",
+              "quantity": 1000,
+              "price": 10790000
+          },
+          {
+              "productId": "697ce754a083ad3904bd8441",
+              "productName": "562L UltimateTaste 700 french door refrigerator",
+              "quantity": 1,
+              "price": 27990000
+          }
+      ],
+      "paymentMethod": "COD",
+      "shippingFee": 50000,
+      "shippingName": "hathanhvu",
+      "shippingPhone": "0882177668",
+      "shippingEmail": "thanhvu7623@gmail.com",
+      "shippingAddress": "Tỉnh Sơn La, Huyện Quỳnh Nhai, Xã Chiềng Khay, 18 yen xa"
+  }
 }
 
 settings {

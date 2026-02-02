@@ -29,18 +29,18 @@ export default function OrderPage() {
 
     return (
         <div className="order-page">
-            <h1 className="title mt-5">Lịch sử đơn hàng</h1>
+            <h1 className="title mt-5">Orders</h1>
 
             {orders.length === 0 ? (
                 <div className="empty-state">
-                    <p>Bạn chưa có đơn hàng nào.</p>
+                    <p>You have been not placed any orders.</p>
                 </div>
             ) : (
                 <div className="order-list">
                     {orders.map((order) => (
                         <div key={order.id} className="order-card">
                             <div className="order-header">
-                                <span className="order-id">Đơn hàng #{order.id.slice(0, 8).toUpperCase()}</span>
+                                <span className="order-id">Order #{order.id.slice(0, 8).toUpperCase()}</span>
                                 <span className={`order-status ${order.status.toLowerCase()}`}>
                                     {order.status}
                                 </span>
@@ -62,7 +62,7 @@ export default function OrderPage() {
                                     }) : ''}
                                 </span>
                                 <div className="order-total">
-                                    Tổng cộng: {order.totalAmount.toLocaleString("vi-VN")}đ
+                                    Total: {order.totalAmount.toLocaleString("vi-VN")}đ
                                 </div>
                             </div>
                         </div>

@@ -157,16 +157,18 @@ function ProductContent() {
                         ) : (
                             // Nếu load xong: Hiển thị sản phẩm thật
                             products.length > 0 ? (
-                                products.map((item) => (
-                                    <div key={item.id} className="col-12 col-sm-6 col-lg-4">
-                                        <div className="product-card-wrapper">
-                                            <Card product={item}/>
+                                products
+                                    .filter(i => i.quantity >= 1)
+                                    .map((item) => (
+                                        <div key={item.id} className="col-12 col-sm-6 col-lg-4">
+                                            <div className="product-card-wrapper">
+                                                <Card product={item}/>
+                                            </div>
                                         </div>
-                                    </div>
-                                ))
+                                    ))
                             ) : (
                                 <div className="col-12 text-center py-5">
-                                    <p className="text-muted">Không tìm thấy sản phẩm nào.</p>
+                                    <p className="text-muted">No products found.</p>
                                 </div>
                             )
                         )}

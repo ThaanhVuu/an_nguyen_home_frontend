@@ -1,12 +1,12 @@
 "use client"
-import { Column, TableCus } from "@/components/TableCus";
-import useProducts, { Product } from "@/app/admin/product/useProducts";
+import {Column, TableCus} from "@/components/TableCus";
+import useProducts, {Product} from "@/app/admin/product/useProducts";
 import React, {useEffect, useState} from "react";
-import { Pagination } from "@/components/Pagination";
+import {Pagination} from "@/components/Pagination";
 import ModalClient from "@/components/modal/ModalClient";
-import { useModal } from "@/hooks/useModalClient";
+import {useModal} from "@/hooks/useModalClient";
 import useCategories from "@/app/admin/category/useCategories";
-import Toast, { ToastType } from "@/components/Toast";
+import Toast, {ToastType} from "@/components/Toast";
 
 import ProductFilter from "./components/ProductFilter"
 import ProductForm from "./components/ProductForm";
@@ -50,7 +50,7 @@ export default function ProductComponent() {
     const [specsList, setSpecsList] = useState<{ key: string, value: string }[]>([]);
 
     // --- HOOKS ---
-    const { categories: subCategories } = useCategories(1000, "hasParent");
+    const {categories: subCategories} = useCategories(1000, "hasParent");
     const {
         products,
         pagination,
@@ -72,7 +72,7 @@ export default function ProductComponent() {
     const [formData, setFormData] = useState<Product>(INIT_PRODUCT);
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-    const { open, close } = useModal(ID_MODAL);
+    const {open, close} = useModal(ID_MODAL);
 
     // --- TABLE CONFIG ---
     const columns: Column<Product>[] = [
@@ -80,7 +80,7 @@ export default function ProductComponent() {
             header: "Image",
             className: "",
             render: (product) => (
-                <div style={{ position: 'relative', width: '200px', height: '100px', backgroundColor: '#f0f0f0' }}>
+                <div style={{position: 'relative', width: '200px', height: '100px', backgroundColor: '#f0f0f0'}}>
                     <Image
                         src={product?.images?.[0]?.imageUrl ?? "https://via.placeholder.com/300x150"}
                         alt={product?.images?.[0]?.altText ?? "product image"}
@@ -109,13 +109,14 @@ export default function ProductComponent() {
                 </div>
             )
         },
-        { header: "Category", className: "text-right", accessor: "categoryName" },
+        {header: "Category", className: "text-right", accessor: "categoryName"},
         {
             header: "Quantity",
             className: "text-right text-muted",
             render: (product) => (
                 <div>
-                    <small className={product.quantity < 5 ? "text-danger" : "text-secondary"}>{product.quantity}</small>
+                    <small
+                        className={product.quantity < 5 ? "text-danger" : "text-secondary"}>{product.quantity}</small>
                 </div>
             )
         },
@@ -125,11 +126,14 @@ export default function ProductComponent() {
             render: (product) => (
                 <div>
                     <div className={"line-through text-xs text-success"}>
-                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
+                        {new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(product.price)}
                     </div>
                     {product.discount ? product.discount > 0 && (
                         <div className="text-danger font-bold">
-                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price - product.discount)}
+                            {new Intl.NumberFormat('vi-VN', {
+                                style: 'currency',
+                                currency: 'VND'
+                            }).format(product.price - product.discount)}
                         </div>
                     ) : 0}
                 </div>
@@ -179,7 +183,7 @@ export default function ProductComponent() {
     }, [sortInputs]);
 
     const handleResetFilter = () => {
-        setFilterInputs({ category: "", priceFrom: "", priceTo: "", status: "" });
+        setFilterInputs({category: "", priceFrom: "", priceTo: "", status: ""});
         setFilterCategory("");
         setFilterStatus("");
         setPriceMin("");
@@ -218,7 +222,7 @@ export default function ProductComponent() {
     }
 
     const handleShowDetail = () => {
-        if(selectedIds.length == 1){
+        if (selectedIds.length == 1) {
             const id = selectedIds[0];
             const url = `/product/${id}`;
 
@@ -235,7 +239,7 @@ export default function ProductComponent() {
                 return acc;
             }, {} as Record<string, any>);
 
-            const payload = { ...formData, specifications: specsObject };
+            const payload = {...formData, specifications: specsObject};
 
             if (isEditMode) await updateProduct(payload);
             else await insertProduct(payload);
@@ -265,6 +269,7 @@ export default function ProductComponent() {
         }
     }
     // --- RENDER ---
+
     return (
         <section className={"row container-fluid mt-5"}>
             {/* SIDEBAR (Action Buttons + Search + Filter) */}
@@ -273,11 +278,17 @@ export default function ProductComponent() {
 
                 <div className={"d-flex gap-2"}>
                     <button className={`btn btn-success w-50 fw-bold`} onClick={handleAddNew}>Add +</button>
-                    <button className={`btn btn-info w-50 text-white fw-bold`} disabled={selectedIds.length !== 1} onClick={handleShowDetail}>Detail</button>
+                    <button className={`btn btn-info w-50 text-white fw-bold`} disabled={selectedIds.length !== 1}
+                            onClick={handleShowDetail}>Detail
+                    </button>
                 </div>
                 <div className={"d-flex gap-2"}>
-                    <button className={`btn btn-primary w-50 fw-bold`} disabled={selectedIds.length !== 1} onClick={handleUpdate}>Update</button>
-                    <button className={`btn btn-danger w-50 fw-bold`} disabled={selectedIds.length < 1} onClick={handleDelete}>Delete</button>
+                    <button className={`btn btn-primary w-50 fw-bold`} disabled={selectedIds.length !== 1}
+                            onClick={handleUpdate}>Update
+                    </button>
+                    <button className={`btn btn-danger w-50 fw-bold`} disabled={selectedIds.length < 1}
+                            onClick={handleDelete}>Delete
+                    </button>
                 </div>
 
                 {/* Component ProductFilter */}
@@ -311,7 +322,10 @@ export default function ProductComponent() {
                     pageSize={pagination.size}
                     totalElements={pagination.totalElements}
                     onPageChange={setPage}
-                    onSizeChange={(size) => { setSize(size); setPage(0); }}
+                    onSizeChange={(size) => {
+                        setSize(size);
+                        setPage(0);
+                    }}
                 />
 
                 {/* MODAL CREATE/UPDATE */}
@@ -321,7 +335,8 @@ export default function ProductComponent() {
                     footer={(
                         <div>
                             <button type="button" className="btn btn-secondary me-2" onClick={close}>Cancel</button>
-                            <button type="button" className="btn btn-success" onClick={handleSave}>{isEditMode ? "Update" : "Save"}</button>
+                            <button type="button" className="btn btn-success"
+                                    onClick={handleSave}>{isEditMode ? "Update" : "Save"}</button>
                         </div>
                     )}
                 >
@@ -335,7 +350,7 @@ export default function ProductComponent() {
                     />
                 </ModalClient>
             </div>
-            {toastMsg && <Toast message={toastMsg} type={toastType} onClose={() => setToastMsg(null)} />}
+            {toastMsg && <Toast message={toastMsg} type={toastType} onClose={() => setToastMsg(null)}/>}
         </section>
     )
 }

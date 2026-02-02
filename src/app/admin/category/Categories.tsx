@@ -1,17 +1,18 @@
 "use client";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import useCategories, {Category} from "@/app/admin/category/useCategories";
 import {Column, TableCus} from "@/components/TableCus";
 import {useModal} from "@/hooks/useModalClient";
 import ModalClient from "@/components/modal/ModalClient";
 import {Pagination} from "@/components/Pagination";
 import Toast, {ToastType} from "@/components/Toast";
+import Image from "next/image";
 
 const INIT_CATE = {
     id: "",
     isActive: true,
     name: "",
-    parentId: "",
+    parentId: null,
     parentName: "",
     slug: "",
 }
@@ -42,6 +43,21 @@ export default function Categories() {
     const {open, close} = useModal(MODAL_ID);
 
     const columns: Column<Category>[] = [
+        {
+            header: "Name",
+            className: "",
+            render: item => (
+                <div>
+                    <Image
+                        // Nếu imgUrl rỗng thì lấy link placeholder
+                        src={item.imgUrl || "https://placehold.co/100"}
+                        alt={item.name}
+                        width={100}
+                        height={100}
+                    />
+                </div>
+            )
+        },
         {
             header: "Name",
             className: "fw-bold text-primary",
@@ -140,7 +156,8 @@ export default function Categories() {
                 setSelectedIds([]); // Clear selection after delete
             }catch (e: any){
                 setToastType("error")
-                setToastMsg(e);
+                setToastMsg("Something went wrong");
+                console.log(e)
             }
         }
     }
@@ -148,10 +165,8 @@ export default function Categories() {
     const handleSave = async () => {
         try {
             if (isEditMode) {
-                console.log(formData)
                 await updateCategory(formData);
             } else {
-                console.log(formData)
                 await insertCategory(formData);
             }
 
@@ -171,8 +186,6 @@ export default function Categories() {
         setPage(0); // Reset về trang 1 khi đổi số lượng hiển thị
     };
 
-    // --- Render Helpers ---
-
     const renderModalFooter = (
         <div>
             <button type="button" className="btn btn-secondary me-2" onClick={close}>
@@ -186,7 +199,6 @@ export default function Categories() {
 
     return (
         <section className="row container-fluid align-items-start mt-5">
-            {/* Sidebar / Tools */}
             <aside className="col-2 d-flex flex-column gap-2">
                 <span className="h4 fw-bold mt-3 mb-1">Category</span>
 

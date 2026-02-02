@@ -90,6 +90,18 @@ function useOrders(initSize?: number) {
         }
     }
 
+    const updateStatus = async (orderId: string, status: string) => {
+        try {
+            setLoading(true);
+            await AxiosClient.put(`/orders/${orderId}/status`, { status });
+            setRefreshTrigger(prev => prev + 1);
+        } catch (err: any) {
+            throw (err);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     useEffect(() => {
         const fetch = async () => {
             try {
@@ -139,6 +151,7 @@ function useOrders(initSize?: number) {
         cancelOrder,
         confirmPayment,
         recordPayment,
+        updateStatus,
         refresh: () => setRefreshTrigger(prev => prev + 1)
     };
 }

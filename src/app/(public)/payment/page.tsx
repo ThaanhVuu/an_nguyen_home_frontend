@@ -7,13 +7,12 @@ import axiosClient from "@/libs/axios/axios.client"; // Đảm bảo đường d
 import Toast, { ToastType } from "@/components/Toast"; // Đảm bảo đường dẫn đúng
 import axios from "axios";
 
-// --- 1. INTERFACES (Định nghĩa kiểu dữ liệu) ---
+// --- 1. INTERFACES ---
 
-// Kiểu dữ liệu trả về từ API (Response)
 interface OrderItemResponse {
     id: string;
     productId: string;
-    productName: string | null; // Backend trả về có thể null hoặc string
+    productName: string | null;
     quantity: number;
     currencyPrice: number;
 }
@@ -28,14 +27,12 @@ interface OrderResponseData {
     createdAt: string;
 }
 
-// Kiểu dữ liệu item lưu trong LocalStorage (Rút gọn)
 export interface SafeItem {
     productName: string;
     quantity: number;
     currencyPrice: number;
 }
 
-// Kiểu dữ liệu đơn hàng lưu trong LocalStorage
 export interface SafeOrderData {
     id: string;
     status: string;
@@ -46,7 +43,6 @@ export interface SafeOrderData {
     savedAt?: string;
 }
 
-// Các kiểu dữ liệu phụ trợ khác
 type CartItem = {
     id: string;
     name: string;
@@ -96,6 +92,7 @@ export default function CheckoutPage() {
     const [paymentMethod, setPaymentMethod] = useState<"card" | "cod" | "qr">("card");
     const [toastMsg, setToastMsg] = useState<string | null>(null);
     const [toastType, setToastType] = useState<ToastType>("success");
+
     const [provinces, setProvinces] = useState<Province[]>([]);
     const [districts, setDistricts] = useState<District[]>([]);
     const [ward, setWard] = useState<Ward[]>([]);
@@ -116,7 +113,7 @@ export default function CheckoutPage() {
     });
 
     // Fetch Provinces
-    const fetctProvince = async () => {
+    const fetchProvince = async () => {
         try {
             const resProvince = await axios.get("https://provinces.open-api.vn/api/v1/?depth=3");
             setProvinces(resProvince.data);
@@ -127,13 +124,13 @@ export default function CheckoutPage() {
 
     // Load Cart & Provinces
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        fetctProvince().then();
+        fetchProvince().then();
+
         const savedCart = localStorage.getItem("cart");
         if (savedCart) {
             try {
                 const parsed: CartItem[] = JSON.parse(savedCart);
-                // Lọc những item được check (nếu có logic check)
+                // Lọc những item được check
                 const checkoutItems = parsed.filter(item => item.checked !== false);
                 setCart(checkoutItems);
             } catch (error) {
@@ -154,40 +151,53 @@ export default function CheckoutPage() {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    // --- 3. HÀM XỬ LÝ LƯU LOCALSTORAGE (ĐÃ FIX LỖI) ---
+    // --- 3. HÀM XỬ LÝ LƯU LOCALSTORAGE ---
     const handleOrderStorage = (orderResponse: OrderResponseData) => {
-        // Lấy dữ liệu cũ
-        const existingData = localStorage.getItem('guest_order_history');
-        let orders: SafeOrderData[] = existingData ? JSON.parse(existingData) : [];
+        try {
+            const existingData = localStorage.getItem('guest_order_history');
+            let orders: SafeOrderData[] = [];
 
-        // Map items từ API sang format lưu trữ (dùng map gọn hơn forEach)
-        const items: SafeItem[] = (orderResponse.orderItems || []).map(i => ({
-            productName: i.productName || "Sản phẩm", // Fallback nếu null
-            quantity: i.quantity,
-            currencyPrice: i.currencyPrice
-        }));
+            // Parse an toàn
+            if (existingData) {
+                try {
+                    orders = JSON.parse(existingData);
+                    if (!Array.isArray(orders)) orders = [];
+                } catch {
+                    orders = [];
+                }
+            }
 
-        // Tạo object an toàn
-        const orderSafe: SafeOrderData = {
-            id: orderResponse.id,
-            items: items,
-            shippingEmail: orderResponse.shippingEmail,
-            shippingFee: orderResponse.shippingFee,
-            status: orderResponse.status,
-            totalAmount: orderResponse.totalAmount,
-            savedAt: new Date().toISOString() // Lưu thêm ngày giờ lưu
-        };
+            // Map items từ API sang format lưu trữ
+            const items: SafeItem[] = (orderResponse.orderItems || []).map(i => ({
+                productName: i.productName || "Sản phẩm",
+                quantity: i.quantity,
+                currencyPrice: i.currencyPrice
+            }));
 
-        // Thêm vào đầu mảng (Quan trọng: push biến orderSafe, không push object rỗng)
-        orders.unshift(orderSafe);
+            // Tạo object an toàn
+            const orderSafe: SafeOrderData = {
+                id: orderResponse.id,
+                items: items,
+                shippingEmail: orderResponse.shippingEmail,
+                shippingFee: orderResponse.shippingFee,
+                status: orderResponse.status,
+                totalAmount: orderResponse.totalAmount,
+                savedAt: new Date().toISOString()
+            };
 
-        // Giới hạn 5 đơn
-        if (orders.length > 20) {
-            orders = orders.slice(0, 20);
+            // Thêm vào đầu mảng
+            orders.unshift(orderSafe);
+
+            // Giới hạn 20 đơn
+            if (orders.length > 20) {
+                orders = orders.slice(0, 20);
+            }
+
+            // Lưu lại
+            localStorage.setItem('guest_order_history', JSON.stringify(orders));
+        } catch (error) {
+            console.error("Lỗi khi lưu lịch sử đơn hàng:", error);
         }
-
-        // Lưu lại
-        localStorage.setItem('guest_order_history', JSON.stringify(orders));
     };
 
     // --- 4. HÀM XỬ LÝ ĐẶT HÀNG ---
@@ -236,35 +246,47 @@ export default function CheckoutPage() {
                 shippingAddress: formattedAddress
             };
 
+            console.log("Sending Order Payload:", orderPayload);
+
             // Gọi API
             const res = await axiosClient.post("/orders", orderPayload);
 
-            // LOGIC LƯU TRỮ ĐƯỢC THÊM VÀO ĐÂY
-            // Kiểm tra xem data nằm ở đâu trong response (thường là res.data.data hoặc res.data)
-            // Dựa trên JSON bạn gửi: { message: "...", data: { ... } }
-            // Nếu axiosClient đã intercept trả về body -> dùng res.data
-            // Nếu axiosClient trả về full axios response -> dùng res.data.data
-            const responseData = res.data?.data;
-            console.log(responseData)
+            // Xử lý Response
+            const responseData = res.data?.data || res.data; // Handle trường hợp response bọc trong data hoặc không
+
+            console.log("Order Success Data:", responseData);
+
             if (responseData && responseData.id) {
                 handleOrderStorage(responseData);
             }
 
             setToastType("success");
-            setToastMsg("Place order success!");
+            setToastMsg("Đặt hàng thành công!");
+
+            // Xóa giỏ hàng sau khi đặt thành công
             localStorage.removeItem("cart");
 
-            // Redirect về trang chủ hoặc trang chi tiết đơn hàng
-            router.push("/order");
-        } catch (error) {
+            // Redirect
+            // Thêm delay nhỏ để Toast hiển thị kịp
+            setTimeout(() => {
+                router.push("/order");
+            }, 1000);
+
+        } catch (error: any) {
             console.error("Order error:", error);
+            // Log chi tiết lỗi từ server trả về (quan trọng để debug lỗi 500)
+            if (error.response) {
+                console.error("Server Response Data:", error.response.data);
+                console.error("Server Status:", error.response.status);
+            }
+
             setToastType("error");
-            setToastMsg("Something went wrong");
+            setToastMsg(error.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại sau.");
         }
     };
 
     if (isLoading) {
-        return <div className="checkout-page" style={{ padding: '2rem' }}>Loading...</div>;
+        return <div className="checkout-page" style={{ padding: '2rem', textAlign: 'center' }}>Loading...</div>;
     }
 
     return (
@@ -339,7 +361,7 @@ export default function CheckoutPage() {
                                         const selectedProvince = provinces.find(p => p.name === selectedCityName);
                                         const districts = selectedProvince ? selectedProvince.districts : [];
                                         setDistricts(districts);
-                                        setWard([]); // Reset ward
+                                        setWard([]);
                                         handleInputChange(e);
                                     }}>
                                 <option value="">Choose province</option>
@@ -414,51 +436,6 @@ export default function CheckoutPage() {
                         <h3>Payment method</h3>
                     </div>
 
-                    {/* card */}
-                    {/*<div*/}
-                    {/*    className={`option column ${paymentMethod === "card" ? "active" : ""}`}*/}
-                    {/*    onClick={() => setPaymentMethod("card")}*/}
-                    {/*>*/}
-                    {/*    /!*<div className="payment-header">*!/*/}
-                    {/*    /!*    <div className="payment-title">*!/*/}
-                    {/*    /!*        <b>Thẻ tín dụng / Ghi nợ</b>*!/*/}
-                    {/*    /!*        <p>Thanh toán an toàn qua Visa, Mastercard</p>*!/*/}
-                    {/*    /!*    </div>*!/*/}
-                    {/*    /!*    <div className="payment-logos">*!/*/}
-                    {/*    /!*        <span className="badge visa">VISA</span>*!/*/}
-                    {/*    /!*        <span className="badge mc">MC</span>*!/*/}
-                    {/*    /!*    </div>*!/*/}
-                    {/*    /!*</div>*!/*/}
-
-                    {/*    {paymentMethod === "card" && (*/}
-                    {/*        <>*/}
-                    {/*            <input*/}
-                    {/*                className="card-input full form-control"*/}
-                    {/*                placeholder="Số thẻ"*/}
-                    {/*                name="cardNumber"*/}
-                    {/*                value={formData.cardNumber}*/}
-                    {/*                onChange={handleInputChange}*/}
-                    {/*            />*/}
-                    {/*            <div className="card-input-row">*/}
-                    {/*                <input*/}
-                    {/*                    placeholder="MM / YY"*/}
-                    {/*                    name="cardDate"*/}
-                    {/*                    className="form-control"*/}
-                    {/*                    value={formData.cardDate}*/}
-                    {/*                    onChange={handleInputChange}*/}
-                    {/*                />*/}
-                    {/*                <input*/}
-                    {/*                    placeholder="Mã CVC"*/}
-                    {/*                    name="cardCvc"*/}
-                    {/*                    className="form-control"*/}
-                    {/*                    value={formData.cardCvc}*/}
-                    {/*                    onChange={handleInputChange}*/}
-                    {/*                />*/}
-                    {/*            </div>*/}
-                    {/*        </>*/}
-                    {/*    )}*/}
-                    {/*</div>*/}
-
                     {/* cod */}
                     <div
                         className={` option ${paymentMethod === "cod" ? "active" : ""}`}
@@ -466,15 +443,6 @@ export default function CheckoutPage() {
                     >
                         <b>Thanh toán khi nhận hàng (COD)</b>
                     </div>
-
-                    {/* qr */}
-                    {/*<div*/}
-                    {/*    className={` option ${paymentMethod === "qr" ? "active" : ""}`}*/}
-                    {/*    onClick={() => setPaymentMethod("qr")}*/}
-                    {/*>*/}
-                    {/*    <b>Quét QR</b>*/}
-                    {/*    <p>STK: 83868386 – VCB – AN NGUYEN STORE</p>*/}
-                    {/*</div>*/}
                 </section>
             </div>
 
